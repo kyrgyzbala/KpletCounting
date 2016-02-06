@@ -28,9 +28,9 @@ using namespace std;
 
 int main(int argc, char** argv) {
 
-    string fname = "duplets_seed.csv";
+//    string fname = "duplets_seed.csv";
 //    string fname = "/Volumes/hudaiber/Projects/KpletCounting/run_folder/duplets_seed.p.bz2";
-//    string fname = argv[1];
+    string fname = argv[1];
 //    vector<string> args(argv+1,argv+argc);
 //    string fname = args[0];
 //    printf("%s\t%d\n", __FILE__, __LINE__);
@@ -46,9 +46,9 @@ int main(int argc, char** argv) {
 //    DataIO::readKpletsFromCsvBz2(fname, kplets, files, file2ind, profiles, profile2ind);
     DataIO::readKpletsFromCsv(fname, kplets, files, file2ind, profiles, profile2ind);
     printf("%lu kplets read.\n", kplets.size());
-//    vector<KpletClass::KpletList> kplet_merged_lists = merging::basic_merge(kplets);
-//    printf("Basic merging finished. Number of merged lists: %lu \n", kplet_merged_lists.size());
-//    cout << "Merged lists size: " << kplet_merged_lists.size() << endl;
+    vector<KpletClass::KpletList> kplet_merged_lists = merging::basic_merge(kplets);
+    printf("Basic merging finished. Number of merged lists: %lu \n", kplet_merged_lists.size());
+    cout << "Merged lists size: " << kplet_merged_lists.size() << endl;
 //    kplet_merged_lists = merging::within_order_iterative(kplet_merged_lists);
 //    cout << "Iterative Merged lists size: " << kplet_merged_lists.size() << endl;
     
