@@ -49,8 +49,8 @@ int main(int argc, char** argv) {
     vector<KpletClass::KpletList> kplet_merged_lists = merging::basic_merge(kplets);
     printf("Basic merging finished. Number of merged lists: %lu \n", kplet_merged_lists.size());
     cout << "Merged lists size: " << kplet_merged_lists.size() << endl;
-//    kplet_merged_lists = merging::within_order_iterative(kplet_merged_lists);
-//    cout << "Iterative Merged lists size: " << kplet_merged_lists.size() << endl;
+    kplet_merged_lists = merging::within_order_iterative(kplet_merged_lists);
+    cout << "Iterative Merged lists size: " << kplet_merged_lists.size() << endl;
     
     return EXIT_SUCCESS;
 }
