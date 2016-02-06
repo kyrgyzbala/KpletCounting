@@ -21,58 +21,34 @@ namespace KpletClass {
     class Kplet{
         
         int k;
-        set<string> codes;
+        vector<int> profiles;
         int id;
         int count;
-        set<string> files;
+        vector<int> files;
         
     public:
         
-        Kplet(int k, set<string> codes, int id, int count, 
-                set<string> files = set<string>()): k(k), codes(codes), id(id), 
+        Kplet(int k, vector<int> profiles, int id, int count, 
+                vector<int> files = vector<int>()): k(k), profiles(profiles), id(id), 
                 count(count), files(files){}
         
         ~Kplet(){}
-        set<string>& GetCodes()  {
-            return codes;
-        }
-
-        void SetCodes(set<string> codes) {
-            this->codes = codes;
-        }
-
-        int GetCount() const {
-            return count;
-        }
-
-        void SetCount(int count) {
-            this->count = count;
-        }
-
-        set<string>& GetFiles() {
+        
+        vector<int>& GetFiles() {
             return files;
         }
 
-        void SetFiles(set<string> files) {
+        void SetFiles(vector<int> files) {
             this->files = files;
         }
 
-        int GetId() const {
-            return id;
+        vector<int>& GetProfiles() {
+            return profiles;
         }
 
-        void SetId(int id) {
-            this->id = id;
+        void SetProfiles(vector<int> profiles) {
+            this->profiles = profiles;
         }
-
-        int GetK() const {
-            return k;
-        }
-
-        void SetK(int k) {
-            this->k = k;
-        }
-
 
     };
     
@@ -84,6 +60,33 @@ namespace KpletClass {
                 files(files) {}
         
         ~KpletList(){}
+        
+        set<string>& GetFiles() {
+            return files;
+        }
+
+        void SetFiles(set<string> files) {
+            this->files = files;
+        }
+
+        vector<Kplet *> GetKplets() {
+            return kplets;
+        }
+
+        void SetKplets(vector<Kplet*> kplets) {
+            this->kplets = kplets;
+        }
+        void merge(KpletList other){
+            //insert the kplets of other to this
+            for(unsigned int i=0;i<other.GetKplets().size();i++){
+                this->kplets.push_back(other.GetKplets()[i]);
+            }
+            
+            set<string>::iterator it;
+            for(it=other.GetFiles().begin(); it!= other.GetFiles().end(); ++it){
+                this->files.insert(*it);
+            }
+        }
     };
     
 }
