@@ -13,10 +13,10 @@
 #include "DataIO.h"
 //#include "BioClasses.h"
 #include<iostream>
-#include <boost/iostreams/copy.hpp>
-#include <boost/iostreams/filtering_stream.hpp>
-#include <boost/iostreams/filter/bzip2.hpp>
-#include <boost/iostreams/device/file.hpp>
+//#include <boost/iostreams/copy.hpp>
+//#include <boost/iostreams/filtering_stream.hpp>
+//#include <boost/iostreams/filter/bzip2.hpp>
+//#include <boost/iostreams/device/file.hpp>
 
 using namespace std;
 
@@ -113,12 +113,107 @@ vector<BioClass::Gene> DataIO::readWGSFile(string fname) {
 //    return kplets;
 //};
              
-void DataIO::readKpletsFromCsvBz2(string fname, 
-                                vector<KpletClass::Kplet> &kplets,
-                                vector<string> &files,
-                                unordered_map<string,unsigned int> &file2ind,
-                                vector<string> &profiles,
-                                unordered_map<string,unsigned int> &profile2ind){
+//void DataIO::readKpletsFromCsvBz2(string fname, 
+//                                vector<KpletClass::Kplet> &kplets,
+//                                vector<string> &files,
+//                                unordered_map<string,unsigned int> &file2ind,
+//                                vector<string> &profiles,
+//                                unordered_map<string,unsigned int> &profile2ind){
+//    
+//    vector<string> file_content;
+//    set<string> set_files;
+//    set<string> set_profiles;
+//    string line;
+//    vector<string> fields;
+//    int id, k, count;
+//    
+//    // Open the file
+//    boost::iostreams::file_source input_file(fname, std::ios_base::in | std::ios_base::binary);
+//    if (!input_file.is_open()){
+//        cerr << "Files is not opened:" << fname << endl;
+//        exit(EXIT_FAILURE);
+//    }
+//    // Uncompress the file with the BZ2 library and its Boost wrapper
+//    boost::iostreams::filtering_istream in;
+////    in.push(boost::iostreams::gzip_decompressor());
+//    in.push(boost::iostreams::bzip2_decompressor());
+//    in.push(input_file);
+//    
+//    //Skip the header line
+//    getline(in, line);
+//    //Scratch vector
+//    vector<string> _sc_vec;
+//    unsigned int i;
+//    
+//    // Uncompress and load content of the file into file_content
+//    // alongside building files, file2ind, profiles, profile2ind
+//    while (getline(in, line)) {
+//        line = line.substr(0, line.size()-1);
+//        file_content.push_back(line);
+//        fields = boost::split(fields, line, boost::is_any_of(","));
+//        boost::split(_sc_vec, fields[3], boost::is_any_of(" "));
+//        for(i=0;i<_sc_vec.size();i++) set_profiles.insert(_sc_vec[i]);
+//        _sc_vec.clear();
+//        boost::split(_sc_vec, fields[4], boost::is_any_of(" "));
+//        for(i=0;i<_sc_vec.size();i++) set_files.insert(_sc_vec[i]);
+//        _sc_vec.clear();
+//    }
+//    
+//    set<string>::iterator it;
+//    
+//    i=0;
+//    for(it=set_profiles.begin();it!=set_profiles.end();it++){
+//        profiles.push_back(*it);
+//        profile2ind[*it]=i;
+//        i++;
+//    }
+//    
+//    i=0;
+//    for(it=set_files.begin();it!=set_files.end();it++){
+//        files.push_back(*it);
+//        file2ind[*it]=i;
+//        i++;
+//    }
+//    
+//    set_profiles.clear();
+//    set_files.clear();
+//    
+//    set<int> profile_inds;
+//    set<int> file_inds;
+//    
+//    for(i=0;i<file_content.size();i++) {
+//        line = file_content[i];
+//        
+//        fields = boost::split(fields, line, boost::is_any_of(","));
+//        
+//        id = atoi(fields[0].c_str());
+//        k = atoi(fields[1].c_str());
+//        
+//        count = atoi(fields[2].c_str());
+//        boost::split(set_profiles, fields[3], boost::is_any_of(" "));
+//        boost::split(set_files, fields[4], boost::is_any_of(" "));
+//        
+//        for(it=set_profiles.begin();it!=set_profiles.end();it++){
+//            profile_inds.insert(profile2ind[*it]);
+//        }
+//        
+//        for(it=set_files.begin();it!=set_files.end();it++){
+//            file_inds.insert(file2ind[*it]);
+//        }
+//        
+//        KpletClass::Kplet *kplet = new KpletClass::Kplet(k, profile_inds, id, count, file_inds);
+//        kplets.push_back(*kplet);
+//        delete kplet;
+//    }
+//}
+
+
+void DataIO::readKpletsFromCsv(string fname, 
+                               vector<KpletClass::Kplet> &kplets,
+                               vector<string> &files,
+                               unordered_map<string,unsigned int> &file2ind,
+                               vector<string> &profiles,
+                               unordered_map<string,unsigned int> &profile2ind){
     
     vector<string> file_content;
     set<string> set_files;
@@ -127,17 +222,9 @@ void DataIO::readKpletsFromCsvBz2(string fname,
     vector<string> fields;
     int id, k, count;
     
+    
     // Open the file
-    boost::iostreams::file_source input_file(fname, std::ios_base::in | std::ios_base::binary);
-    if (!input_file.is_open()){
-        cerr << "Files is not opened:" << fname << endl;
-        exit(EXIT_FAILURE);
-    }
-    // Uncompress the file with the BZ2 library and its Boost wrapper
-    boost::iostreams::filtering_istream in;
-//    in.push(boost::iostreams::gzip_decompressor());
-    in.push(boost::iostreams::bzip2_decompressor());
-    in.push(input_file);
+    ifstream in(fname);
     
     //Skip the header line
     getline(in, line);
