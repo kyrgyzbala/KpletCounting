@@ -20,7 +20,7 @@ using namespace std;
 
 namespace merging {
 
-//    vector<KpletClass::KpletList> basic_merge(vector<KpletClass::Kplet> &kplets);
+    vector<KpletClass::KpletList> basic_merge(vector<KpletClass::Kplet> &kplets);
 //    vector<KpletClass::KpletList> within_order_iterative(vector<KpletClass::KpletList> kpletlists);
 }
 

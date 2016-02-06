@@ -42,20 +42,11 @@ int main(int argc, char** argv) {
     vector<string> profiles;
     unordered_map<string, unsigned int> profile2ind;
     vector<KpletClass::Kplet> kplets;
-    
+    printf("Reading kplets from: %s\n", fname.c_str());
     DataIO::readKpletsFromCsvBz2(fname, kplets, files, file2ind, profiles, profile2ind);
-    
-    cout << "Files and file2ind sizes:" << endl;
-    cout<< files.size() << endl;
-    cout<< file2ind.size() << endl;
-    cout << "Profiles and profile2ind sizes:" << endl;
-    cout<< profiles.size() << endl;
-    cout<< profile2ind.size() << endl;
-//    DataIO::readKpletsFromCsvBz2(fname, &kplets, &files, &file2ind, &profiles, &profile2ind);
-    
-    
-//    vector< KpletClass::Kplet> kplets = DataIO::readKpletsFromCsvBz2(fname);
-//    vector<KpletClass::KpletList> kplet_merged_lists = merging::basic_merge(kplets);
+    printf("%lu kplets read.\n", kplets.size());
+    vector<KpletClass::KpletList> kplet_merged_lists = merging::basic_merge(kplets);
+    printf("Basic merging finished. Number of merged lists: %lu \n", kplet_merged_lists.size());
 //    cout << "Merged lists size: " << kplet_merged_lists.size() << endl;
 //    kplet_merged_lists = merging::within_order_iterative(kplet_merged_lists);
 //    cout << "Iterative Merged lists size: " << kplet_merged_lists.size() << endl;

@@ -21,51 +21,76 @@ namespace KpletClass {
     class Kplet{
         
         int k;
-        vector<int> profiles;
+        set<int> profiles;
         int id;
         int count;
-        vector<int> files;
+        set<int> files;
         
     public:
         
-        Kplet(int k, vector<int> profiles, int id, int count, 
-                vector<int> files = vector<int>()): k(k), profiles(profiles), id(id), 
+        Kplet(int k, set<int> profiles, int id, int count, 
+                set<int> files = set<int>()): k(k), profiles(profiles), id(id), 
                 count(count), files(files){}
         
         ~Kplet(){}
         
-        vector<int>& GetFiles() {
+        set<int>& GetFiles() {
             return files;
         }
 
-        void SetFiles(vector<int> files) {
+        void SetFiles(set<int> files) {
             this->files = files;
         }
 
-        vector<int>& GetProfiles() {
+        set<int>& GetProfiles() {
             return profiles;
         }
 
-        void SetProfiles(vector<int> profiles) {
+        void SetProfiles(set<int> profiles) {
             this->profiles = profiles;
         }
+        
+        int GetCount() {
+            return count;
+        }
 
+        void SetCount(int count) {
+            this->count = count;
+        }
+
+        int GetId() {
+            return id;
+        }
+
+        void SetId(int id) {
+            this->id = id;
+        }
+
+        int GetK() {
+            return k;
+        }
+
+        void SetK(int k) {
+            this->k = k;
+        }
+
+        
     };
     
     class KpletList{
         vector<Kplet *> kplets;
-        set<string> files;
+        set<int> files;
     public:
-        KpletList(vector<Kplet *> kplets, set<string> files): kplets(kplets),
+        KpletList(vector<Kplet *> kplets, set<int> files): kplets(kplets),
                 files(files) {}
         
         ~KpletList(){}
         
-        set<string>& GetFiles() {
+        set<int>& GetFiles() {
             return files;
         }
 
-        void SetFiles(set<string> files) {
+        void SetFiles(set<int> files) {
             this->files = files;
         }
 
@@ -82,7 +107,7 @@ namespace KpletClass {
                 this->kplets.push_back(other.GetKplets()[i]);
             }
             
-            set<string>::iterator it;
+            set<int>::iterator it;
             for(it=other.GetFiles().begin(); it!= other.GetFiles().end(); ++it){
                 this->files.insert(*it);
             }
