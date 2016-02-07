@@ -81,48 +81,48 @@ vector<KpletClass::KpletList> merging::basic_merge(vector<KpletClass::Kplet> &kp
 
 };
 
-//vector<KpletClass::KpletList> merging::within_order_iterative(vector<KpletClass::KpletList> kplet_lists) {
-//    
-//    vector<KpletClass::KpletList> new_kplet_lists;
-//    vector<int> merged_out;
-//    vector<string> common_files;
-//    float avg_len;
-//    
-//    while(1){
-//        
-//        merged_out.clear();
-//        new_kplet_lists.clear();
-//        
-//        
-//        unsigned int i,j;
-//        for(i=0;i<kplet_lists.size();i++)merged_out.push_back(0);
-//        
-//        for(i=0;i<kplet_lists.size();i++){
-//            
-//            if (merged_out[i]==1) continue;
-//            
-//            for(j=i+1;j<kplet_lists.size();j++){
-//                
-//                if (merged_out[j]==1) continue;
-//                
-//                set_intersection(kplet_lists[i].GetFiles().begin(), kplet_lists[i].GetFiles().end(),
-//                                 kplet_lists[j].GetFiles().begin(), kplet_lists[j].GetFiles().end(),
-//                                 back_inserter(common_files));
-//                
-//                avg_len = (kplet_lists[i].GetFiles().size() + kplet_lists[j].GetFiles().size()) / 2.0;
-//                
-//                if ((float)common_files.size()/avg_len > 0.5){
-//                    kplet_lists[i].merge(kplet_lists[j]);
-//                    merged_out[j] = 1;
-//                }
-//                common_files.clear();
-//            }
-//            new_kplet_lists.push_back(kplet_lists[i]);
-//        }
-//        if (new_kplet_lists.size() == kplet_lists.size()) break;
-//        kplet_lists = new_kplet_lists;
-//    }
-//    
-//    return kplet_lists;
-//
-//};
+vector<KpletClass::KpletList> merging::within_order_iterative(vector<KpletClass::KpletList> kplet_lists) {
+    
+    vector<KpletClass::KpletList> new_kplet_lists;
+    vector<int> merged_out;
+    vector<int> common_files;
+    float avg_len;
+    
+    while(1){
+        
+        merged_out.clear();
+        new_kplet_lists.clear();
+        
+        
+        unsigned int i,j;
+        for(i=0;i<kplet_lists.size();i++)merged_out.push_back(0);
+        
+        for(i=0;i<kplet_lists.size();i++){
+            
+            if (merged_out[i]==1) continue;
+            
+            for(j=i+1;j<kplet_lists.size();j++){
+                
+                if (merged_out[j]==1) continue;
+                
+                set_intersection(kplet_lists[i].GetFiles().begin(), kplet_lists[i].GetFiles().end(),
+                                 kplet_lists[j].GetFiles().begin(), kplet_lists[j].GetFiles().end(),
+                                 back_inserter(common_files));
+                
+                avg_len = (kplet_lists[i].GetFiles().size() + kplet_lists[j].GetFiles().size()) / 2.0;
+                
+                if ((float)common_files.size()/avg_len > 0.5){
+                    kplet_lists[i].merge(kplet_lists[j]);
+                    merged_out[j] = 1;
+                }
+                common_files.clear();
+            }
+            new_kplet_lists.push_back(kplet_lists[i]);
+        }
+        if (new_kplet_lists.size() == kplet_lists.size()) break;
+        kplet_lists = new_kplet_lists;
+    }
+    
+    return kplet_lists;
+
+};
