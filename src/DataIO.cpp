@@ -209,7 +209,7 @@ vector<BioClass::Gene> DataIO::readWGSFile(string fname) {
 
 
 void DataIO::readKpletsFromCsv(string fname, 
-                               vector<KpletClass::Kplet> &kplets,
+                               vector<KpletClass::Kplet2> &kplets,
                                vector<string> &files,
                                unordered_map<string,unsigned int> &file2ind,
                                vector<string> &profiles,
@@ -221,7 +221,6 @@ void DataIO::readKpletsFromCsv(string fname,
     string line;
     vector<string> fields;
     int id, k, count;
-    
     
     // Open the file
     ifstream in(fname);
@@ -288,42 +287,78 @@ void DataIO::readKpletsFromCsv(string fname,
             file_inds.insert(file2ind[*it]);
         }
         
-        KpletClass::Kplet *kplet = new KpletClass::Kplet(k, profile_inds, id, count, file_inds);
+        KpletClass::Kplet2 *kplet = new KpletClass::Kplet2(k, profile_inds, id, count, file_inds);
         kplets.push_back(*kplet);
         delete kplet;
     }
 }
 
 
-//vector<KpletClass::Kplet> DataIO::readKpletsFromCsv(string fname){
-//    
+void DataIO::readKpletsFromCsv(string fname,
+                               vector<KpletClass::Kplet> &kplets){
+    
 //    vector<KpletClass::Kplet> kplets;
-//    
-//    ifstream infile(fname.c_str());
-//    string line;
-//    
-//    //Skip the header line
-//    getline(infile, line);
-//    vector<string> fields;
-//    
-//    int id, k, count;
-//    set<string> codes;
-//    set<string> files;
-//    
-//    while (getline(infile, line)) {
-//        
-//        fields = boost::split(fields, line, boost::is_any_of(","));
-//        
-//        id = atoi(fields[0].c_str());
-//        k = atoi(fields[1].c_str());
-//        count = atoi(fields[2].c_str());
-//        boost::split(codes, fields[3], boost::is_any_of(" "));
-//        boost::split(files, fields[4], boost::is_any_of(" "));
-//        
-//        KpletClass::Kplet *kplet = new KpletClass::Kplet(k, codes, id, count, files);
-//        kplets.push_back(*kplet);
-//        delete kplet;
-//    }
-//    
-//    return kplets;
-//};
+    
+    ifstream infile(fname.c_str());
+    string line;
+    
+    //Skip the header line
+    getline(infile, line);
+    vector<string> fields;
+    
+    int id, k, count;
+    set<string> codes;
+    set<string> files;
+    
+    while (getline(infile, line)) {
+        
+        line = line.substr(0, line.size()-1);
+        fields = boost::split(fields, line, boost::is_any_of(","));
+        
+        id = atoi(fields[0].c_str());
+        k = atoi(fields[1].c_str());
+        count = atoi(fields[2].c_str());
+        boost::split(codes, fields[3], boost::is_any_of(" "));
+        boost::split(files, fields[4], boost::is_any_of(" "));
+        
+        KpletClass::Kplet *kplet = new KpletClass::Kplet(k, codes, id, count, files);
+        kplets.push_back(*kplet);
+        delete kplet;
+    }
+};
+
+void DataIO::writeMergedListsToCsv(vector<KpletClass::KpletList> &kplet_lists, string fname){
+    
+    ofstream outf;
+    outf.open(fname);
+    
+    if (!outf.is_open()){
+        printf("Could not open file for writing: %s\n", fname.c_str());
+        exit(EXIT_FAILURE);
+    }
+    
+    string kplet_ids = "";
+    string file_names = "";
+    unsigned int i, j;
+    for(i=0;i<kplet_lists.size();i++){
+        
+        for(j=0;j<kplet_lists[i].GetKplets().size();j++){
+            kplet_ids += to_string(kplet_lists[i].GetKplets()[j]->GetId()) + " ";
+        }
+        kplet_ids = kplet_ids.substr(0, kplet_ids.length()-1);
+        
+//        cout << kplet_lists[i].GetFiles().size() << endl;
+        
+        set<string>::iterator it;
+        for(it=kplet_lists[i].GetFiles().begin();it!=kplet_lists[i].GetFiles().end();++it){
+            file_names+= *it + " ";
+        }
+        file_names = file_names.substr(0, file_names.length()-1);
+        
+        outf << kplet_ids+","+file_names+"\n";
+        kplet_ids = "";
+        file_names = "";
+    }
+    outf.close();
+    
+}
