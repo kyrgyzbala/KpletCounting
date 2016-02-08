@@ -32,11 +32,16 @@ namespace DataIO{
 //                            vector<string> &profiles,
 //                            unordered_map<string,unsigned int> &profile2ind);
     void readKpletsFromCsv(string fname, 
-                            vector<KpletClass::Kplet> &kplets,
+                            vector<KpletClass::Kplet2> &kplets,
                             vector<string> &files,
                             unordered_map<string,unsigned int> &file2ind,
                             vector<string> &profiles,
                             unordered_map<string,unsigned int> &profile2ind);
+    
+    void readKpletsFromCsv(string fname, 
+                            vector<KpletClass::Kplet> &kplets);
+    
+    void writeMergedListsToCsv(vector<KpletClass::KpletList> &kplet_lists, string fname);
     
 //    vector<KpletClass::Kplet> readKpletsFromCsv(string fname);
     

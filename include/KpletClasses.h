@@ -18,7 +18,7 @@ using namespace std;
 
 namespace KpletClass {
 
-    class Kplet{
+    class Kplet2{
         
         int k;
         set<int> profiles;
@@ -28,11 +28,11 @@ namespace KpletClass {
         
     public:
         
-        Kplet(int k, set<int> profiles, int id, int count, 
+        Kplet2(int k, set<int> profiles, int id, int count, 
                 set<int> files = set<int>()): k(k), profiles(profiles), id(id), 
                 count(count), files(files){}
         
-        ~Kplet(){}
+        ~Kplet2(){}
         
         set<int>& GetFiles() {
             return files;
@@ -77,14 +77,14 @@ namespace KpletClass {
         
     };
     
-    class KpletList{
-        vector<Kplet *> kplets;
+    class KpletList2{
+        vector<Kplet2 *> kplets;
         set<int> files;
     public:
-        KpletList(vector<Kplet *> kplets, set<int> files): kplets(kplets),
+        KpletList2(vector<Kplet2 *> kplets, set<int> files): kplets(kplets),
                 files(files) {}
         
-        ~KpletList(){}
+        ~KpletList2(){}
         
         set<int>& GetFiles() {
             return files;
@@ -94,14 +94,15 @@ namespace KpletClass {
             this->files = files;
         }
 
-        vector<Kplet *> GetKplets() {
+        vector<Kplet2 *> GetKplets() {
             return kplets;
         }
 
-        void SetKplets(vector<Kplet*> kplets) {
+        void SetKplets(vector<Kplet2 *> kplets) {
             this->kplets = kplets;
         }
-        void merge(KpletList other){
+        
+        void merge(KpletList2 other){
             //insert the kplets of other to this
             for(unsigned int i=0;i<other.GetKplets().size();i++){
                 this->kplets.push_back(other.GetKplets()[i]);
@@ -113,5 +114,102 @@ namespace KpletClass {
             }
         }
     };
+    
+    
+    class Kplet{
+        
+        int k;
+        set<string> profiles;
+        int id;
+        int count;
+        set<string> files;
+        
+    public:
+        
+        Kplet(int k, set<string> profiles, int id, int count, 
+                set<string> files = set<string>()): k(k), profiles(profiles), id(id), 
+                count(count), files(files){}
+        
+        ~Kplet(){}
+        
+        set<string>& GetFiles() {
+            return files;
+        }
+
+        void SetFiles(set<string> files) {
+            this->files = files;
+        }
+
+        set<string>& GetProfiles() {
+            return profiles;
+        }
+
+        void SetProfiles(set<string> profiles) {
+            this->profiles = profiles;
+        }
+        
+        int GetCount() {
+            return count;
+        }
+
+        void SetCount(int count) {
+            this->count = count;
+        }
+
+        int GetId() {
+            return id;
+        }
+
+        void SetId(int id) {
+            this->id = id;
+        }
+
+        int GetK() {
+            return k;
+        }
+
+        void SetK(int k) {
+            this->k = k;
+        }
+    };
+    
+    class KpletList{
+        vector<Kplet *> kplets;
+        set<string> files;
+    public:
+        KpletList(vector<Kplet *> kplets, set<string> files): kplets(kplets),
+                files(files) {}
+        
+        ~KpletList(){}
+        
+        set<string>& GetFiles() {
+            return files;
+        }
+
+        void SetFiles(set<string> files) {
+            this->files = files;
+        }
+
+        vector<Kplet *> GetKplets() {
+            return kplets;
+        }
+
+        void SetKplets(vector<Kplet*> kplets) {
+            this->kplets = kplets;
+        }
+        
+        void merge(KpletList other){
+            //insert the kplets of other to this
+            for(unsigned int i=0;i<other.GetKplets().size();i++){
+                this->kplets.push_back(other.GetKplets()[i]);
+            }
+            
+            set<string>::iterator it;
+            for(it=other.GetFiles().begin(); it!= other.GetFiles().end(); ++it){
+                this->files.insert(*it);
+            }
+        }
+    };
+    
     
 }
