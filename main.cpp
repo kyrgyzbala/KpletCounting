@@ -35,7 +35,7 @@ void processUsingMaps(string input_file, string output_file){
     unordered_map<string, unsigned int> profile2ind;
     vector<KpletClass::Kplet_ind> kplets;
     printf("Reading kplets from: %s\n", input_file.c_str());
-    DataIO::readKpletsFromCsv(input_file, kplets, files, file2ind, profiles, profile2ind);
+    DataIO::readKpletsFromCsvBz2(input_file, kplets, files, file2ind, profiles, profile2ind);
     printf("%lu kplets read.\n", kplets.size());
     vector<KpletClass::KpletList_ind> kplet_merged_lists = merging::basic_merge(kplets);
     printf("Basic merging finished. Number of merged lists: %lu \n", kplet_merged_lists.size());
@@ -48,7 +48,7 @@ void processPlainVector(string fname, string out_name){
     
     vector<KpletClass::Kplet> kplets;
     printf("Reading kplets from: %s\n", fname.c_str());
-    DataIO::readKpletsFromCsv(fname, kplets);
+    DataIO::readKpletsFromCsvBz2(fname, kplets);
     printf("%lu kplets read.\n", kplets.size());
     vector<KpletClass::KpletList> kplet_merged_lists = merging::basic_merge(kplets);
     printf("Basic merging finished. Number of merged lists: %lu \n", kplet_merged_lists.size());
@@ -67,7 +67,23 @@ int main(int argc, char** argv) {
     string input_file = argv[1];
     string output_file = argv[2];
     
+    time_t start, end;
+    double elapsed_secs;
+    
+    cout << "Starting using maps" << endl;
+    start = clock();
     processUsingMaps(input_file, output_file);
+    end = clock();
+    elapsed_secs = double(end - start) / CLOCKS_PER_SEC;
+    cout << "Elapsed time: " << elapsed_secs << endl;
+
+    cout << "Starting using vectors" << endl;
+    start = clock();
+    processPlainVector(input_file, output_file);
+    end = clock();
+    elapsed_secs = double(end - start) / CLOCKS_PER_SEC;
+    cout << "Elapsed time: " << elapsed_secs << endl;
+    
     
     cout << "Done!" << endl;
     
