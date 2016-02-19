@@ -14,7 +14,7 @@
 
 using namespace std;
 
-bool similar_same_order(KpletClass::Kplet2 &kplet1, KpletClass::Kplet2 &kplet2) {
+bool similar_same_order(KpletClass::Kplet_ind &kplet1, KpletClass::Kplet_ind &kplet2) {
     
     vector<int> common_profiles, common_files;
     
@@ -37,6 +37,7 @@ bool similar_same_order(KpletClass::Kplet2 &kplet1, KpletClass::Kplet2 &kplet2) 
     
     return false;
 };
+
 
 bool similar_same_order(KpletClass::Kplet &kplet1, KpletClass::Kplet &kplet2) {
     
@@ -64,18 +65,20 @@ bool similar_same_order(KpletClass::Kplet &kplet1, KpletClass::Kplet &kplet2) {
 
 
 
-vector<KpletClass::KpletList2> merging::basic_merge(vector<KpletClass::Kplet2> &kplets) {
-
-    vector<KpletClass::KpletList2> merged_list;
+vector<KpletClass::KpletList_ind> merging::basic_merge(vector<KpletClass::Kplet_ind> &kplets) {
+    
+    vector<KpletClass::KpletList_ind> merged_list;
     
     vector<bool> merged_out;
     vector<int> to_move;
-    vector<KpletClass::Kplet2 *> to_move_kplets;
+    vector<KpletClass::Kplet_ind *> to_move_kplets;
     set<int> to_move_files;
     unsigned int i;
+    
     for (i = 0; i < kplets.size(); i++)merged_out.push_back(0);
     
     for (i = 0; i < kplets.size()-1; i++) {
+        if(i%500000==0) printf("Basic merging reached %dth element\n",i);
         if (merged_out[i] == 1) continue;
         unsigned int j;
         for (j = i + 1; j < kplets.size(); j++) {
@@ -95,12 +98,11 @@ vector<KpletClass::KpletList2> merging::basic_merge(vector<KpletClass::Kplet2> &
             to_move_files.insert(kplets[to_move[k]].GetFiles().begin(), kplets[to_move[k]].GetFiles().end());
         }
         
-        KpletClass::KpletList2 kplet_list(to_move_kplets, to_move_files);
+        KpletClass::KpletList_ind kplet_list(to_move_kplets, to_move_files);
         merged_list.push_back(kplet_list);
         to_move.clear();
         to_move_kplets.clear();
         to_move_files.clear();
-
     }
     
     return merged_list;
@@ -122,7 +124,6 @@ vector<KpletClass::KpletList> merging::basic_merge(vector<KpletClass::Kplet> &kp
     for (i = 0; i < kplets.size()-1; i++) {
         if (merged_out[i] == 1) continue;
         unsigned int j;
-//        int cnt = 0;
         for (j = i + 1; j < kplets.size(); j++) {
             
             if (merged_out[j] == 1) continue;
@@ -130,12 +131,8 @@ vector<KpletClass::KpletList> merging::basic_merge(vector<KpletClass::Kplet> &kp
             if (to_move.size() == 0) to_move.push_back(i);
             
             if (similar_same_order(kplets[i], kplets[j])){
-//                printf("Merge detected: %d, %d, %d\n", cnt, i, j);
-//                if (cnt==50) exit(EXIT_SUCCESS);
-                
                 to_move.push_back(j);
                 merged_out[j]=1;
-//                cnt++;
             }
         }
         
@@ -154,9 +151,9 @@ vector<KpletClass::KpletList> merging::basic_merge(vector<KpletClass::Kplet> &kp
 };
 
 
-vector<KpletClass::KpletList2> merging::within_order_iterative(vector<KpletClass::KpletList2> kplet_lists) {
+vector<KpletClass::KpletList_ind> merging::within_order_iterative(vector<KpletClass::KpletList_ind> kplet_lists) {
     
-    vector<KpletClass::KpletList2> new_kplet_lists;
+    vector<KpletClass::KpletList_ind> new_kplet_lists;
     vector<int> merged_out;
     vector<int> common_files;
     float avg_len;

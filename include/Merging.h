@@ -21,8 +21,8 @@ using namespace std;
 namespace merging {
     
     
-    vector<KpletClass::KpletList2> basic_merge(vector<KpletClass::Kplet2> &kplets);
-    vector<KpletClass::KpletList2> within_order_iterative(vector<KpletClass::KpletList2> kpletlists);
+    vector<KpletClass::KpletList_ind> basic_merge(vector<KpletClass::Kplet_ind> &kplets);
+    vector<KpletClass::KpletList_ind> within_order_iterative(vector<KpletClass::KpletList_ind> kpletlists);
     
     vector<KpletClass::KpletList> basic_merge(vector<KpletClass::Kplet> &kplets);
     vector<KpletClass::KpletList> within_order_iterative(vector<KpletClass::KpletList> kpletlists);
