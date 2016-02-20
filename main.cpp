@@ -60,7 +60,7 @@ void processPlainVector(string fname, string out_name){
 int main(int argc, char** argv) {
     
     if (argc<3){
-        cout << "Usage: merger input_file.csv output_file.csv"<< endl;
+        cout << "Usage: merger input_file.csv.bz2 output_file.csv"<< endl;
         exit(EXIT_FAILURE);
     }
     
@@ -76,14 +76,13 @@ int main(int argc, char** argv) {
     end = clock();
     elapsed_secs = double(end - start) / CLOCKS_PER_SEC;
     cout << "Elapsed time: " << elapsed_secs << endl;
-
+    
     cout << "Starting using vectors" << endl;
     start = clock();
     processPlainVector(input_file, output_file);
     end = clock();
     elapsed_secs = double(end - start) / CLOCKS_PER_SEC;
     cout << "Elapsed time: " << elapsed_secs << endl;
-    
     
     cout << "Done!" << endl;
     
