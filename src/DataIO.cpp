@@ -98,13 +98,12 @@ void DataIO::readKpletsFromCsvBz2(string fname, vector<KpletClass::Kplet> &kplet
         
         id = atoi(fields[0].c_str());
         k = atoi(fields[1].c_str());
-        
         count = atoi(fields[2].c_str());
+        
         boost::split(codes, fields[3], boost::is_any_of(" "));
         boost::split(files, fields[4], boost::is_any_of(" "));
         
         KpletClass::Kplet *kplet = new KpletClass::Kplet(k, codes, id, count, files);
-        
         kplets.push_back(*kplet);
         
         delete kplet;
@@ -134,7 +133,6 @@ void DataIO::readKpletsFromCsvBz2(string fname,
     }
     // Uncompress the file with the BZ2 library and its Boost wrapper
     boost::iostreams::filtering_istream in;
-//    in.push(boost::iostreams::gzip_decompressor());
     in.push(boost::iostreams::bzip2_decompressor());
     in.push(input_file);
     
@@ -182,15 +180,21 @@ void DataIO::readKpletsFromCsvBz2(string fname,
     set<int> profile_inds;
     set<int> file_inds;
     
+    clock_t start, end;
+    double elapsed_secs;
+    
+    start = clock();
+//    printf("Start creating kplets\n");
     for(i=0;i<file_content.size();i++) {
+        
         line = file_content[i];
         
-        fields = boost::split(fields, line, boost::is_any_of(","));
+        boost::split(fields, line, boost::is_any_of(","));
         
         id = atoi(fields[0].c_str());
         k = atoi(fields[1].c_str());
-        
         count = atoi(fields[2].c_str());
+        
         boost::split(set_profiles, fields[3], boost::is_any_of(" "));
         boost::split(set_files, fields[4], boost::is_any_of(" "));
         
@@ -204,7 +208,10 @@ void DataIO::readKpletsFromCsvBz2(string fname,
         
         KpletClass::Kplet_ind *kplet = new KpletClass::Kplet_ind(k, profile_inds, id, count, file_inds);
         kplets.push_back(*kplet);
+        
         delete kplet;
+        profile_inds.clear();
+        file_inds.clear();
     }
 }
 

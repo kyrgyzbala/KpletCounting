@@ -11,10 +11,11 @@
 #include<iostream>
 #include<cstdio>
 #include<algorithm>
+#include<fstream>
 
 using namespace std;
 
-bool similar_same_order(KpletClass::Kplet_ind &kplet1, KpletClass::Kplet_ind &kplet2) {
+bool similar_same_order(KpletClass::Kplet_ind &kplet1, KpletClass::Kplet_ind &kplet2, merging::Parameters &params) {
     
     vector<int> common_profiles, common_files;
     
@@ -29,17 +30,18 @@ bool similar_same_order(KpletClass::Kplet_ind &kplet1, KpletClass::Kplet_ind &kp
     int k = kplet1.GetK();
     int num_common_codes = common_profiles.size();
     float ratio_common_files = float(common_files.size()) / min(kplet1.GetFiles().size(), kplet2.GetFiles().size());
-    if (ratio_common_files == 1) return true;
-    if ((k == 5) && (num_common_codes == 4 && ratio_common_files > 0.9)) return true;
-    else if ((k == 4) && (num_common_codes == 3 && ratio_common_files > 0.9)) return true;
-    else if ((k == 3) && (num_common_codes == 2 && ratio_common_files > 0.9)) return true;
-    else if ((k == 2) && (num_common_codes == 1 && ratio_common_files > 0.9)) return true;
+    
+//    if (ratio_common_files == 1) return true;
+    if ((k == 5) && (num_common_codes == 4 && ratio_common_files > params.basic_loci_thr)) return true;
+    else if ((k == 4) && (num_common_codes == 3 && ratio_common_files > params.basic_loci_thr)) return true;
+    else if ((k == 3) && (num_common_codes == 2 && ratio_common_files > params.basic_loci_thr)) return true;
+    else if ((k == 2) && (num_common_codes == 1 && ratio_common_files > params.basic_loci_thr)) return true;
     
     return false;
 };
 
 
-bool similar_same_order(KpletClass::Kplet &kplet1, KpletClass::Kplet &kplet2) {
+bool similar_same_order(KpletClass::Kplet &kplet1, KpletClass::Kplet &kplet2, merging::Parameters &params) {
     
     vector<string> common_profiles, common_files;
     
@@ -54,7 +56,7 @@ bool similar_same_order(KpletClass::Kplet &kplet1, KpletClass::Kplet &kplet2) {
     int k = kplet1.GetK();
     int num_common_codes = common_profiles.size();
     float ratio_common_files = float(common_files.size()) / min(kplet1.GetFiles().size(), kplet2.GetFiles().size());
-    if (ratio_common_files == 1) return true;
+//    if (ratio_common_files == 1) return true;
     if ((k == 5) && (num_common_codes == 4 && ratio_common_files > 0.9)) return true;
     else if ((k == 4) && (num_common_codes == 3 && ratio_common_files > 0.9)) return true;
     else if ((k == 3) && (num_common_codes == 2 && ratio_common_files > 0.9)) return true;
@@ -65,7 +67,7 @@ bool similar_same_order(KpletClass::Kplet &kplet1, KpletClass::Kplet &kplet2) {
 
 
 
-vector<KpletClass::KpletList_ind> merging::basic_merge(vector<KpletClass::Kplet_ind> &kplets) {
+vector<KpletClass::KpletList_ind> merging::basic_merge(vector<KpletClass::Kplet_ind> &kplets, merging::Parameters &params) {
     
     vector<KpletClass::KpletList_ind> merged_list;
     
@@ -74,20 +76,24 @@ vector<KpletClass::KpletList_ind> merging::basic_merge(vector<KpletClass::Kplet_
     vector<KpletClass::Kplet_ind *> to_move_kplets;
     set<int> to_move_files;
     unsigned int i;
+    set<int> scratch_set;
     
-    for (i = 0; i < kplets.size(); i++)merged_out.push_back(0);
+    for (i = 0; i < kplets.size()-1; i++)merged_out.push_back(0);
     
     for (i = 0; i < kplets.size()-1; i++) {
-        if(i%500000==0) printf("Basic merging reached %dth element\n",i);
+        
+//        if(i%10000==0) printf("Basic merging reached %dth element\n",i);
+        
         if (merged_out[i] == 1) continue;
+        
         unsigned int j;
+        
         for (j = i + 1; j < kplets.size(); j++) {
-            
             if (merged_out[j] == 1) continue;
             
             if (to_move.size() == 0) to_move.push_back(i);
             
-            if (similar_same_order(kplets[i], kplets[j])){
+            if (similar_same_order(kplets[i], kplets[j], params)){
                 to_move.push_back(j);
                 merged_out[j]=1;
             }
@@ -95,7 +101,8 @@ vector<KpletClass::KpletList_ind> merging::basic_merge(vector<KpletClass::Kplet_
         
         for(unsigned int k=0;k<to_move.size();k++){
             to_move_kplets.push_back(&kplets[to_move[k]]);
-            to_move_files.insert(kplets[to_move[k]].GetFiles().begin(), kplets[to_move[k]].GetFiles().end());
+            scratch_set = kplets[to_move[k]].GetFiles();
+            to_move_files.insert(scratch_set.begin(), scratch_set.end());
         }
         
         KpletClass::KpletList_ind kplet_list(to_move_kplets, to_move_files);
@@ -106,12 +113,11 @@ vector<KpletClass::KpletList_ind> merging::basic_merge(vector<KpletClass::Kplet_
     }
     
     return merged_list;
-
 };
 
 
-vector<KpletClass::KpletList> merging::basic_merge(vector<KpletClass::Kplet> &kplets) {
-
+vector<KpletClass::KpletList> merging::basic_merge(vector<KpletClass::Kplet> &kplets, merging::Parameters &params) {
+    
     vector<KpletClass::KpletList> merged_list;
     
     vector<bool> merged_out;
@@ -122,6 +128,7 @@ vector<KpletClass::KpletList> merging::basic_merge(vector<KpletClass::Kplet> &kp
     for (i = 0; i < kplets.size(); i++)merged_out.push_back(0);
     
     for (i = 0; i < kplets.size()-1; i++) {
+        if(i%10000==0) printf("Basic merging reached %dth element\n",i);
         if (merged_out[i] == 1) continue;
         unsigned int j;
         for (j = i + 1; j < kplets.size(); j++) {
@@ -130,7 +137,7 @@ vector<KpletClass::KpletList> merging::basic_merge(vector<KpletClass::Kplet> &kp
             
             if (to_move.size() == 0) to_move.push_back(i);
             
-            if (similar_same_order(kplets[i], kplets[j])){
+            if (similar_same_order(kplets[i], kplets[j], params)){
                 to_move.push_back(j);
                 merged_out[j]=1;
             }
@@ -151,7 +158,7 @@ vector<KpletClass::KpletList> merging::basic_merge(vector<KpletClass::Kplet> &kp
 };
 
 
-vector<KpletClass::KpletList_ind> merging::within_order_iterative(vector<KpletClass::KpletList_ind> kplet_lists) {
+vector<KpletClass::KpletList_ind> merging::within_order_iterative(vector<KpletClass::KpletList_ind> kplet_lists, merging::Parameters &params) {
     
     vector<KpletClass::KpletList_ind> new_kplet_lists;
     vector<int> merged_out;
@@ -181,7 +188,7 @@ vector<KpletClass::KpletList_ind> merging::within_order_iterative(vector<KpletCl
                 
                 avg_len = (kplet_lists[i].GetFiles().size() + kplet_lists[j].GetFiles().size()) / 2.0;
                 
-                if ((float)common_files.size()/avg_len > 0.5){
+                if ((float)common_files.size()/avg_len > params.iterative_loci_thr){
                     kplet_lists[i].merge(kplet_lists[j]);
                     merged_out[j] = 1;
                 }
@@ -197,7 +204,7 @@ vector<KpletClass::KpletList_ind> merging::within_order_iterative(vector<KpletCl
 
 };
 
-vector<KpletClass::KpletList> merging::within_order_iterative(vector<KpletClass::KpletList> kplet_lists) {
+vector<KpletClass::KpletList> merging::within_order_iterative(vector<KpletClass::KpletList> kplet_lists, merging::Parameters &params){
     
     vector<KpletClass::KpletList> new_kplet_lists;
     vector<int> merged_out;

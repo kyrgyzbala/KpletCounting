@@ -20,12 +20,19 @@ using namespace std;
 
 namespace merging {
     
+    class Parameters{
+    public:
+        float basic_loci_thr;
+        float iterative_loci_thr;
+        Parameters(float basic_loci_thr, float iterative_loci_thr):
+                basic_loci_thr(basic_loci_thr), iterative_loci_thr(iterative_loci_thr){}
+    };
     
-    vector<KpletClass::KpletList_ind> basic_merge(vector<KpletClass::Kplet_ind> &kplets);
-    vector<KpletClass::KpletList_ind> within_order_iterative(vector<KpletClass::KpletList_ind> kpletlists);
+    vector<KpletClass::KpletList_ind> basic_merge(vector<KpletClass::Kplet_ind> &kplets, Parameters &params);
+    vector<KpletClass::KpletList_ind> within_order_iterative(vector<KpletClass::KpletList_ind> kpletlists, Parameters &params);
     
-    vector<KpletClass::KpletList> basic_merge(vector<KpletClass::Kplet> &kplets);
-    vector<KpletClass::KpletList> within_order_iterative(vector<KpletClass::KpletList> kpletlists);
+    vector<KpletClass::KpletList> basic_merge(vector<KpletClass::Kplet> &kplets, Parameters &params);
+    vector<KpletClass::KpletList> within_order_iterative(vector<KpletClass::KpletList> kpletlists, Parameters &params);
     
 }
 
